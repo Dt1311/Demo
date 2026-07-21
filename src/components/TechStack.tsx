@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { TECH_STACK } from '../data/content'
-import { AnimatedGrid, NoiseOverlay } from './shared/Background'
+import { AnimatedGrid, NoiseOverlay, Vignette, Particles } from './shared/Background'
 import { BlurCircle } from './shared/BlurCircle'
 import { Container, Section, SectionHeading } from './shared/Section'
 import { Reveal } from './shared/Reveal'
@@ -19,18 +19,18 @@ const groupColors: Record<string, string> = {
 }
 
 const positions = [
-  { x: 50, y: 8 },   // top center
-  { x: 82, y: 22 },  // top right
-  { x: 88, y: 55 },  // right
-  { x: 78, y: 85 },  // bottom right
-  { x: 50, y: 92 },  // bottom center
-  { x: 22, y: 85 },  // bottom left
-  { x: 12, y: 55 },  // left
-  { x: 18, y: 22 },  // top left
-  { x: 50, y: 38 },  // center upper
-  { x: 68, y: 62 },  // center right lower
-  { x: 32, y: 62 },  // center left lower
-  { x: 50, y: 68 },  // center lower
+  { x: 50, y: 8 },
+  { x: 82, y: 22 },
+  { x: 88, y: 55 },
+  { x: 78, y: 85 },
+  { x: 50, y: 92 },
+  { x: 22, y: 85 },
+  { x: 12, y: 55 },
+  { x: 18, y: 22 },
+  { x: 50, y: 38 },
+  { x: 68, y: 62 },
+  { x: 32, y: 62 },
+  { x: 50, y: 68 },
 ]
 
 const connections: [number, number][] = [
@@ -56,8 +56,12 @@ function TechNode({ tech, pos, index }: { tech: typeof TECH_STACK[number]; pos: 
         className="group relative flex flex-col items-center gap-2"
       >
         <div
+          className="pointer-events-none absolute -inset-3 rounded-3xl opacity-40 blur-xl"
+          style={{ background: `radial-gradient(circle at center, ${color}40 0%, transparent 70%)` }}
+        />
+        <div
           className="relative flex h-16 w-16 items-center justify-center rounded-2xl glass-strong"
-          style={{ boxShadow: `0 0 28px -8px ${color}` }}
+          style={{ boxShadow: `0 0 32px -8px ${color}, inset 0 1px 0 0 rgba(255,255,255,0.06)` }}
         >
           <div className="absolute inset-0 rounded-2xl opacity-25" style={{ background: `radial-gradient(circle at 50% 50%, ${color} 0%, transparent 70%)` }} />
           <span className="font-display text-sm font-bold" style={{ color }}>
@@ -77,8 +81,12 @@ export function TechStack() {
   return (
     <Section id="tech">
       <AnimatedGrid />
-      <NoiseOverlay opacity={0.03} />
-      <BlurCircle color="rgba(124, 109, 255, 0.1)" size={500} className="left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" duration={16} />
+      <NoiseOverlay opacity={0.035} />
+      <Vignette opacity={0.3} />
+      <Particles count={12} />
+      <BlurCircle color="rgba(124, 109, 255, 0.1)" size={520} className="left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" duration={16} />
+      <BlurCircle color="rgba(20, 217, 255, 0.06)" size={400} className="left-[-6%] top-[20%]" duration={18} delay={2} />
+      <BlurCircle color="rgba(59, 130, 246, 0.06)" size={380} className="right-[-8%] bottom-[15%]" duration={20} delay={4} />
 
       <Container className="relative z-10">
         <Reveal>
@@ -89,29 +97,40 @@ export function TechStack() {
           />
         </Reveal>
 
-        <Reveal delay={0.15} className="mt-14">
+        <Reveal delay={0.15} className="mt-12">
           <div className="relative overflow-hidden rounded-3xl glass-strong p-6 sm:p-10">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#14d9ff]/50 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px glow-line opacity-60" />
+            <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-20" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(124,109,255,0.12), transparent 60%)' }} />
 
             <div className="relative h-[380px] w-full sm:h-[480px]">
               <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
                 {connections.map(([from, to], i) => {
                   const a = positions[from]
                   const b = positions[to]
+                  const ca = groupColors[TECH_STACK[from].group] || '#14d9ff'
+                  const cb = groupColors[TECH_STACK[to].group] || '#14d9ff'
                   return (
-                    <motion.line
-                      key={i}
-                      x1={`${a.x}%`}
-                      y1={`${a.y}%`}
-                      x2={`${b.x}%`}
-                      y2={`${b.y}%`}
-                      stroke="rgba(255,255,255,0.08)"
-                      strokeWidth="1"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      whileInView={{ pathLength: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, delay: i * 0.05 }}
-                    />
+                    <g key={i}>
+                      <defs>
+                        <linearGradient id={`grad-${i}`} x1={`${a.x}%`} y1={`${a.y}%`} x2={`${b.x}%`} y2={`${b.y}%`}>
+                          <stop offset="0%" stopColor={ca} stopOpacity="0.4" />
+                          <stop offset="100%" stopColor={cb} stopOpacity="0.4" />
+                        </linearGradient>
+                      </defs>
+                      <motion.line
+                        x1={`${a.x}%`} y1={`${a.y}%`} x2={`${b.x}%`} y2={`${b.y}%`}
+                        stroke={`url(#grad-${i})`}
+                        strokeWidth="1.5"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        whileInView={{ pathLength: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: i * 0.05 }}
+                        style={{ filter: 'drop-shadow(0 0 3px rgba(20,217,255,0.3))' }}
+                      />
+                      <motion.circle r="2.5" fill={ca} style={{ filter: `drop-shadow(0 0 4px ${ca})` }}>
+                        <animateMotion dur={`${4 + i * 0.3}s`} repeatCount="indefinite" path={`M ${a.x * 10} ${a.y * 5} L ${b.x * 10} ${b.y * 5}`} />
+                      </motion.circle>
+                    </g>
                   )
                 })}
               </svg>

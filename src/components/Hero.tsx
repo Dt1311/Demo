@@ -3,7 +3,7 @@ import { ArrowRight, Play } from 'lucide-react'
 import { lazy, Suspense } from 'react'
 import { HERO_STATS } from '../data/content'
 import { FloatingCards } from './hero/FloatingCards'
-import { AnimatedGrid, NoiseOverlay, Particles } from './shared/Background'
+import { AnimatedGrid, NoiseOverlay, Particles, LightBeams, Vignette } from './shared/Background'
 import { BlurCircle } from './shared/BlurCircle'
 import { Container } from './shared/Section'
 
@@ -13,11 +13,15 @@ export function Hero() {
   return (
     <section id="hero" className="relative min-h-screen w-full overflow-hidden pt-32 pb-20">
       <AnimatedGrid />
-      <NoiseOverlay opacity={0.035} />
-      <Particles count={20} />
-      <BlurCircle color="rgba(20, 217, 255, 0.16)" size={520} className="left-[-10%] top-[10%]" duration={16} />
-      <BlurCircle color="rgba(124, 109, 255, 0.14)" size={460} className="right-[-8%] top-[30%]" duration={18} delay={2} />
-      <BlurCircle color="rgba(59, 130, 246, 0.12)" size={400} className="bottom-[5%] left-[40%]" duration={20} delay={4} />
+      <div className="pointer-events-none absolute inset-0 grid-bg-fine mask-fade-edges-soft" aria-hidden />
+      <NoiseOverlay opacity={0.04} />
+      <Vignette opacity={0.4} />
+      <Particles count={26} />
+      <LightBeams />
+      <BlurCircle color="rgba(20, 217, 255, 0.14)" size={560} className="left-[-12%] top-[8%]" duration={16} />
+      <BlurCircle color="rgba(124, 109, 255, 0.12)" size={500} className="right-[-10%] top-[25%]" duration={18} delay={2} />
+      <BlurCircle color="rgba(59, 130, 246, 0.1)" size={440} className="bottom-[2%] left-[35%]" duration={20} delay={4} />
+      <BlurCircle color="rgba(20, 217, 255, 0.08)" size={360} className="left-[30%] top-[55%]" duration={14} delay={1} />
 
       <Container className="relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <div className="flex flex-col gap-7">
@@ -25,7 +29,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-[#94a3b8]"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-[#94a3b8] backdrop-blur-sm"
           >
             <span className="flex h-1.5 w-1.5 rounded-full bg-[#14d9ff] shadow-[0_0_8px_#14d9ff]" />
             Decision intelligence for modern teams
@@ -68,7 +72,7 @@ export function Hero() {
             </a>
             <a
               href="#autoclarity"
-              className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
+              className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-[15px] font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/10"
             >
               <Play className="h-4 w-4 text-[#14d9ff]" />
               Watch demo
@@ -82,7 +86,7 @@ export function Hero() {
             className="mt-2 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4"
           >
             {HERO_STATS.map((s) => (
-              <div key={s.label} className="flex flex-col">
+              <div key={s.label} className="flex flex-col gap-1">
                 <span className="font-display text-2xl font-semibold text-white">{s.value}</span>
                 <span className="text-xs leading-tight text-[#94a3b8]">{s.label}</span>
               </div>
@@ -90,8 +94,13 @@ export function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative h-[420px] w-full sm:h-[520px] lg:h-[600px]">
-          <div className="absolute inset-0">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="relative h-[420px] w-full sm:h-[520px] lg:h-[600px]"
+        >
+          <div className="absolute inset-0 scale-110">
             <Suspense
               fallback={
                 <div className="flex h-full items-center justify-center">
@@ -103,7 +112,7 @@ export function Hero() {
             </Suspense>
           </div>
           <FloatingCards />
-        </div>
+        </motion.div>
       </Container>
 
       <motion.div

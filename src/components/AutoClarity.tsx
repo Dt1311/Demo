@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Activity, ArrowDownRight, ArrowUpRight, Cpu, Gauge, Zap } from 'lucide-react'
-import { AnimatedGrid, NoiseOverlay } from './shared/Background'
+import { AnimatedGrid, NoiseOverlay, Vignette } from './shared/Background'
 import { BlurCircle } from './shared/BlurCircle'
 import { Container, Section, SectionHeading } from './shared/Section'
 import { Reveal, Stagger, StaggerItem } from './shared/Reveal'
@@ -31,7 +31,7 @@ function MetricCard({ m }: { m: typeof metrics[number] }) {
     <div ref={ref}>
       <GlowCard className="p-5" glowColor={`${m.color}33`}>
         <div className="flex items-start justify-between">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5" style={{ color: m.color }}>
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5" style={{ color: m.color, boxShadow: `0 0 16px -4px ${m.color}` }}>
             <Icon className="h-5 w-5" />
           </span>
           <span className={`flex items-center gap-1 text-xs font-medium ${m.up ? 'text-emerald-400' : 'text-rose-400'}`}>
@@ -62,13 +62,7 @@ function ProgressRing({ value, label, color }: { value: number; label: string; c
         <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
           <motion.circle
-            cx="50"
-            cy="50"
-            r="42"
-            fill="none"
-            stroke={color}
-            strokeWidth="6"
-            strokeLinecap="round"
+            cx="50" cy="50" r="42" fill="none" stroke={color} strokeWidth="6" strokeLinecap="round"
             strokeDasharray={circumference}
             animate={{ strokeDashoffset: offset }}
             transition={{ duration: 0.3 }}
@@ -99,23 +93,18 @@ function Sparkline() {
     <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
         <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#14d9ff" stopOpacity="0.3" />
+          <stop offset="0%" stopColor="#14d9ff" stopOpacity="0.35" />
           <stop offset="100%" stopColor="#14d9ff" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={areaPoints} fill="url(#spark)" />
       <motion.polyline
-        points={points}
-        fill="none"
-        stroke="#14d9ff"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        points={points} fill="none" stroke="#14d9ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
         initial={{ pathLength: 0 }}
         whileInView={{ pathLength: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.5, ease: 'easeInOut' }}
-        style={{ filter: 'drop-shadow(0 0 4px #14d9ff)' }}
+        style={{ filter: 'drop-shadow(0 0 6px #14d9ff)' }}
       />
     </svg>
   )
@@ -125,9 +114,11 @@ export function AutoClarity() {
   return (
     <Section id="autoclarity">
       <AnimatedGrid />
-      <NoiseOverlay opacity={0.03} />
-      <BlurCircle color="rgba(20, 217, 255, 0.1)" size={480} className="left-[-6%] top-[15%]" duration={18} />
-      <BlurCircle color="rgba(124, 109, 255, 0.08)" size={420} className="right-[-8%] bottom-[20%]" duration={20} delay={3} />
+      <NoiseOverlay opacity={0.035} />
+      <Vignette opacity={0.35} />
+      <BlurCircle color="rgba(20, 217, 255, 0.1)" size={500} className="left-[-8%] top-[12%]" duration={18} />
+      <BlurCircle color="rgba(124, 109, 255, 0.08)" size={440} className="right-[-10%] bottom-[18%]" duration={20} delay={3} />
+      <BlurCircle color="rgba(59, 130, 246, 0.06)" size={360} className="left-[45%] top-[60%]" duration={14} delay={5} />
 
       <Container className="relative z-10">
         <Reveal>
@@ -138,10 +129,11 @@ export function AutoClarity() {
           />
         </Reveal>
 
-        <Reveal delay={0.15} className="mt-14">
+        <Reveal delay={0.15} className="mt-12">
           <div className="relative overflow-hidden rounded-3xl glass-strong p-6 sm:p-8">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#14d9ff]/50 to-transparent" />
-            <div className="flex items-center justify-between border-b border-white/5 pb-5">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px glow-line opacity-60" />
+            <div className="pointer-events-none absolute -inset-px rounded-3xl opacity-20" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(20,217,255,0.12), transparent 50%)' }} />
+            <div className="relative flex items-center justify-between border-b border-white/5 pb-5">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 <span className="font-display text-base font-semibold text-white">Live dashboard</span>
@@ -157,7 +149,7 @@ export function AutoClarity() {
               ))}
             </Stagger>
 
-            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
+            <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
               <GlowCard className="p-6">
                 <div className="mb-4 flex items-center justify-between">
                   <span className="text-sm font-medium text-white">Signal throughput</span>
@@ -177,9 +169,9 @@ export function AutoClarity() {
               </GlowCard>
             </div>
 
-            <GlowCard className="mt-6 p-6">
+            <GlowCard className="mt-5 p-6">
               <span className="mb-4 block text-sm font-medium text-white">Activity feed</span>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2.5">
                 {activity.map((a, i) => (
                   <motion.div
                     key={i}
@@ -187,7 +179,7 @@ export function AutoClarity() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08, duration: 0.5 }}
-                    className="flex items-center justify-between rounded-xl bg-white/[0.02] px-4 py-3"
+                    className="flex items-center justify-between rounded-xl bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.04]"
                   >
                     <div className="flex items-center gap-3">
                       <span className="h-2 w-2 rounded-full" style={{ background: a.color, boxShadow: `0 0 8px ${a.color}` }} />

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
 import { ArrowUp } from 'lucide-react'
 import { FOOTER_NAV } from '../data/content'
-import { AnimatedGrid, NoiseOverlay } from './shared/Background'
+import { AnimatedGrid, NoiseOverlay, Vignette } from './shared/Background'
+import { BlurCircle } from './shared/BlurCircle'
 import { Container } from './shared/Section'
 import { GlowDivider } from './shared/BlurCircle'
 
@@ -11,9 +12,12 @@ export function Footer() {
     <footer className="relative w-full overflow-hidden pt-20 pb-10">
       <AnimatedGrid />
       <NoiseOverlay opacity={0.03} />
+      <Vignette opacity={0.4} />
+      <BlurCircle color="rgba(20, 217, 255, 0.06)" size={400} className="left-[-8%] top-[10%]" duration={18} />
+      <BlurCircle color="rgba(124, 109, 255, 0.05)" size={360} className="right-[-6%] bottom-[5%]" duration={20} delay={2} />
 
       <Container className="relative z-10">
-        <GlowDivider className="mb-16" />
+        <GlowDivider className="mb-14" />
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 flex flex-col gap-4">
@@ -42,7 +46,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 sm:flex-row">
           <p className="text-sm text-[#94a3b8]">
             © {new Date().getFullYear()} UpSolve, Inc. All rights reserved.
           </p>
@@ -52,10 +56,11 @@ export function Footer() {
               onClick={scrollTop}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
-              className="group flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-colors hover:border-[#14d9ff]/30 hover:text-[#14d9ff]"
+              className="group relative flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-colors hover:border-[#14d9ff]/30 hover:text-[#14d9ff]"
               aria-label="Back to top"
             >
-              <ArrowUp className="h-5 w-5" />
+              <div className="pointer-events-none absolute -inset-1 rounded-xl opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-30" style={{ background: 'radial-gradient(circle, rgba(20,217,255,0.5), transparent)' }} />
+              <ArrowUp className="relative h-5 w-5" />
             </motion.button>
           </div>
         </div>

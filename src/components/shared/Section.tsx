@@ -11,9 +11,9 @@ export function SectionHeading({
 }) {
   const alignment = align === 'center' ? 'mx-auto text-center items-center' : 'text-left items-start'
   return (
-    <div className={`flex max-w-2xl flex-col gap-4 ${alignment}`}>
+    <div className={`flex max-w-2xl flex-col gap-5 ${alignment}`}>
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-[#14d9ff]">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-[#14d9ff] backdrop-blur-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-[#14d9ff] shadow-[0_0_8px_#14d9ff]" />
           {eyebrow}
         </span>
@@ -32,7 +32,7 @@ export function Container({ children, className = '' }: { children: React.ReactN
 
 export function Section({ id, children, className = '' }: { id?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section id={id} className={`relative w-full overflow-hidden py-[120px] ${className}`}>
+    <section id={id} className={`relative w-full overflow-hidden py-[100px] sm:py-[120px] ${className}`}>
       {children}
     </section>
   )
